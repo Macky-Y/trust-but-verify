@@ -32,9 +32,21 @@ You might be wondering why we need two windows running arpspoof. Network communi
 
 After running those commands, I opened Wireshark, set it to listen on `wlan0` (my USB NIC), and successfully intercepted the packets.
 
-<img src="ntp.png" align="center">
+<img src="ntp.png">
+
+All the captured packets (ran for 5 minutes) were NTP (Network Time Protocol) background traffic. At this point, I could confidently say the high-usage warning was just a glitch in their system. If the camera were actually recording and uploading video, the traffic would be UDP or TCP, and the packet lengths would be continuously maxing out around 1400-1500 bytes, not sitting around 90 bytes.
+
+To test that theory and prove my capture was working, I triggered a Live View in my Blink mobile app.
+
+<img src="tcp-packet.png">
+
+Wireshark immediately lit up with TCP packets as the camera tried to establish a video stream. Interestingly, the live video feed actually failed to load on my phone. Because I was routing the heavy video traffic through my single USB Wi-Fi adapter, it created a half-duplex bottleneck and acted as an accidental Denial of Service (DoS) attack against my own camera, dropping the connection. As you can also notice the length of my TCP is lower than the NTP, the reason why it is lower is that it is just a retransmission with 0 payload (actual data).
+
+Even with the dropped connection, the packet data told me exactly what I needed to know. I can definitively conclude the support representative was right: the camera was not recording when disarmed, and the alert was just a system glitch.
 </p>
 <br>
+
+
 <hr>
 <p align="center">
   <b>
