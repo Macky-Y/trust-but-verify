@@ -19,11 +19,13 @@ I did a lot of troubleshooting before I made it to work. The first problem I fac
 <p>
 To intercept the network traffic, I opened two separate terminal windows. I used these commands:
 
-#Terminal Window 1:
+<ol>
+<li><b>Terminal Window 1:</b></li>
 <i>sudo arpspoof -i wlan0 -t gateway_ip camera_ip</i>
-#Terminal Window 2:
-<i>sudo arpspoof -i wlan0 -t camera_ip gateway_ip</i>
 
+<li><b>Terminal Window 2:</b></li>
+<i>sudo arpspoof -i wlan0 -t camera_ip gateway_ip</i>
+</ol>
 You might be wondering why we need two windows running arpspoof. Network communication is a two-way street, so you have to trick both devices to capture the full conversation. It goes like this:
 <ul>
   <li><b>Terminal Window 1</b> command poisons the router: <i>“Hey Router! I am the camera. Send the camera's incoming internet replies to me.</i>”</li>
