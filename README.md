@@ -16,6 +16,23 @@ I know for a fact that my home network is not perfectly secure. I currently just
 I did a lot of troubleshooting before I made it to work. The first problem I faced was that my ARP spoofing tool wasn't working in my VM. My VM network was set to NAT, which isolates the VM in a virtual subnet, making it unable to send Layer 2 broadcasts to detect the camera's IP. I changed the VM to Bridged mode, but the same problem persists. I realized VMware uses MAC translation (ARP Proxy) for Wi-Fi bridging, which actively blocks forged ARP packets from leaving the host machine. Fortunately, I had USB NIC. I plugged it directly into my machine, passed it through to Kali, ran <i>ip a</i>, and voila, it pulled a proper local IP address on my physical subnet.
 </p>
 
+<p>
+To intercept the network traffic, I opened two separate terminal windows. I used these commands:
+
+#Terminal Window 1:
+<i>sudo arpspoof -i wlan0 -t gateway_ip camera_ip</i>
+#Terminal Window 2:
+<i>sudo arpspoof -i wlan0 -t camera_ip gateway_ip</i>
+
+You might be wondering why we need two windows running arpspoof. Network communication is a two-way street, so you have to trick both devices to capture the full conversation. It goes like this:
+<ul>
+  <li><b>Terminal Window 1</b> command poisons the router: <i>“Hey Router! I am the camera. Send the camera's incoming internet replies to me.</i>”</li>
+  <li><b>Terminal Window 2</b> command poisons the camera: <i>“Hey Camera! I am the router. Send all your outgoing traffic to me.”</i></li>
+</ul>
+
+After running those commands, I opened Wireshark, set it to listen on `wlan0` (my USB NIC), and successfully intercepted the packets.
+</p>
+
 <p align="center">
   <b>
     Note: Do not scan networks that you don't have permission to scan! This program is intended for education purposes only. Using this program for unauthorized network scanning or malicious activities is strictly prohibited. I am not responsible for any misuse or legal repercussions that may arise from unauthorized scanning.
