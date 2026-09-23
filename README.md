@@ -31,8 +31,11 @@ You might be wondering why we need two windows running arpspoof. Network communi
 </ul>
 
 After running those commands, I opened Wireshark, set it to listen on `wlan0` (my USB NIC), and successfully intercepted the packets.
-</p>
 
+<img src="ntp.png" align="center">
+</p>
+<br>
+<hr>
 <p align="center">
   <b>
     Note: Do not scan networks that you don't have permission to scan! This program is intended for education purposes only. Using this program for unauthorized network scanning or malicious activities is strictly prohibited. I am not responsible for any misuse or legal repercussions that may arise from unauthorized scanning.
